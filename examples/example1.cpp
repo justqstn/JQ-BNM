@@ -6,6 +6,9 @@
 
 int main()
 {
+
+    // dont forgot about initialize
+    IL2CPP::Initialize();
     /*
     Getting assemblies and images of assemblies
     */
