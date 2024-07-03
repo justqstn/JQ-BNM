@@ -8,17 +8,12 @@
 
 namespace IL2CPP
 {
-    class Array
+    struct Array
     {
     public:
-        Array(void *address)
+        static IL2CPP::Array* New(IL2CPP::Class* klass, int length)
         {
-            this->handle = address;
-        }
-
-        static IL2CPP::Array New(IL2CPP::Class klass, int length)
-        {
-            return IL2CPP::ExportCall::ArrayNew(klass.Address(), length);
+            return (IL2CPP::Array*)IL2CPP::ExportCall::ArrayNew((void*)klass, length);
         }
 
         /*template<typename T>
@@ -28,32 +23,32 @@ namespace IL2CPP
 
         int Length()
         {
-            return IL2CPP::ExportCall::ArrayLength(this->handle);
+            return IL2CPP::ExportCall::ArrayLength((void*)this);
         }
 
-        IL2CPP::Object Object()
+        IL2CPP::Object* Object()
         {
-            return IL2CPP::Object(this->handle);
+            return (IL2CPP::Object*)this;
         }
 
-        IL2CPP::Type ElementType()
+        IL2CPP::Type* ElementType()
         {
-            return IL2CPP::Type(IL2CPP::Type(this->Object().Class().Type()).Class().BaseType());
+            return (IL2CPP::Type*)(((IL2CPP::Type*)(this->Object()->Class()->Type()))->Class()->BaseType());
         }
 
         int ElementSize()
         {
-            return IL2CPP::Class(this->ElementType().Address()).ElementSize();
+            return ((IL2CPP::Class*)(this->ElementType()))->ElementSize();
         }
 
         void *Elements()
         {
             void *str = IL2CPP::ExportCall::StringNew("v");
-            void *(*toCharArray)(void *) = (void *(*)(void *))((IL2CPP::Method(IL2CPP::ExportCall::MethodFromName(IL2CPP::ExportCall::ClassFromName(IL2CPP::ExportCall::AssemblyGetImage(IL2CPP::ExportCall::GetAssemblyFromDomain(IL2CPP::ExportCall::GetDomain(), "mscorlib")), "System", "String"), "ToCharArray", 0)).VA()));
+            void *(*toCharArray)(void *) = (void *(*)(void *))((((IL2CPP::Method*)(IL2CPP::ExportCall::MethodFromName(IL2CPP::ExportCall::ClassFromName(IL2CPP::ExportCall::AssemblyGetImage(IL2CPP::ExportCall::GetAssemblyFromDomain(IL2CPP::ExportCall::GetDomain(), "mscorlib")), "System", "String"), "ToCharArray", 0)))->VA()));
             void *charArray = toCharArray(str);
             uint64_t offset = IL2CPP::Array::offsetOf(charArray, 118);
 
-            uint64_t addr = (uint64_t)this->handle + offset;
+            uint64_t addr = (uint64_t)this + offset;
             return (void *)addr;
         }
 
@@ -69,14 +64,7 @@ namespace IL2CPP
             *(T *)((uint64_t)this->Elements() + index * this->ElementSize()) = value;
         }
 
-        void *Address()
-        {
-            return this->handle;
-        }
-
     private:
-        void *handle;
-
         static uint64_t offsetOf(void *start_ptr, int16_t value)
         {
             int depth = 512;

@@ -4,7 +4,7 @@
 
 namespace IL2CPP
 {
-    class Method
+    struct Method
     {
     public:
         enum class Attributes
@@ -35,20 +35,9 @@ namespace IL2CPP
             RequireSecObject = 0x8000
         };
 
-        Method(void *address, void *_instance = nullptr)
-        {
-            this->handle = address;
-            this->instance = _instance;
-        }
-
-        void *Address()
-        {
-            return this->handle;
-        }
-
         const char *Name()
         {
-            return IL2CPP::ExportCall::MethodGetName(this->handle);
+            return IL2CPP::ExportCall::MethodGetName((void *)this);
         }
 
         // Returns Virtual Address of method - it's RVA (offset)+maindll address.
@@ -70,7 +59,7 @@ namespace IL2CPP
                 LOG_ERROR("Couldn't find the VA of method " + std::string(this->Name()) + "(). You can try increase \"depth\" value in IL2CPPResolver2.0/Structures/IL2CPP/Method.hpp/Method::offsetOf or kys.");
                 return 0;
             }
-            uint64_t result = (uint64_t)(*(void **)((uint64_t)offset + (uint64_t)this->handle));
+            uint64_t result = (uint64_t)(*(void **)((uint64_t)offset + (uint64_t)this));
             return result;
         }
 
@@ -81,9 +70,6 @@ namespace IL2CPP
         }
 
     private:
-        void *handle;
-        void *instance;
-
         static uint64_t offsetOf(uint64_t start_ptr, uint64_t equal_ptr)
         {
             int depth = 512;

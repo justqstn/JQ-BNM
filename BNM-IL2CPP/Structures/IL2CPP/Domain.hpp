@@ -5,28 +5,20 @@
 
 namespace IL2CPP
 {
-    class Domain
+    struct Domain
     {
     public:
         Domain()
         {
-            this->handle = IL2CPP::ExportCall::GetDomain();
-        }
-
-        void *Address()
-        {
-            return this->handle;
+            IL2CPP::ExportCall::GetDomain();
         }
 
         // Returns assembly by the name
-        IL2CPP::Assembly Assembly(const char *name)
+        IL2CPP::Assembly *Assembly(const char *name)
         {
-            return IL2CPP::Assembly(IL2CPP::ExportCall::GetAssemblyFromDomain(this->handle, name));
+            return (IL2CPP::Assembly *)(IL2CPP::ExportCall::GetAssemblyFromDomain((void *)this, name));
         }
 
         // а тут мы кароч представим КУЧУ крутых методов чтобы ну там ээээ ну ээээ найти КЛАСС
-
-    private:
-        void *handle;
     };
 }

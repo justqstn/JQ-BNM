@@ -1,13 +1,10 @@
+#include "../Logger/Logger.h"
 
-// Log functions.
-void __log(const char *msg)
-{
-    return;
-}
-#define LOG_DEBUG __log
+// Debug function
+#define LOG_DEBUG Logger::log_debug
 
 // Error function
-#define LOG_ERROR __log
+#define LOG_ERROR Logger::log_err
 
 #ifdef _WIN64
 #define IL2CPP_CALLING_CONVENTION __fastcall *

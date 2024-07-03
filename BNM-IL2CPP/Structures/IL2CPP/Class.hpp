@@ -8,140 +8,101 @@
 
 namespace IL2CPP
 {
-    class Class
+    struct Class
     {
     public:
-        Class(void *address)
-        {
-            this->handle = address;
-        }
-
         const char *Name()
         {
-            return IL2CPP::ExportCall::ClassGetName(this->handle);
-        }
-
-        void *Address()
-        {
-            return this->handle;
+            return IL2CPP::ExportCall::ClassGetName((void *)this);
         }
 
         // Return method of class by the name and parameter count
-        IL2CPP::Method Method(const char *name, int parameter_count = -1)
+        IL2CPP::Method *Method(const char *name, int parameter_count = -1)
         {
-            return IL2CPP::Method(IL2CPP::ExportCall::MethodFromName(this->handle, name, parameter_count));
+            return (IL2CPP::Method *)IL2CPP::ExportCall::MethodFromName((void *)this, name, parameter_count);
         }
 
         // Return field of class by the name
-        IL2CPP::Field Field(const char *name)
+        IL2CPP::Field *Field(const char *name)
         {
-            return IL2CPP::Field(IL2CPP::ExportCall::FieldFromName(this->handle, name));
+            return (IL2CPP::Field *)(IL2CPP::ExportCall::FieldFromName((void *)this, name));
         }
 
         // Returns size of erm what the sigma
         int ElementSize()
         {
-            return IL2CPP::ExportCall::ClassArrayElementSize(this->handle);
+            return IL2CPP::ExportCall::ClassArrayElementSize((void *)this);
         }
 
         void *Type()
         {
-            return IL2CPP::ExportCall::TypeFromClass(this->handle);
+            return IL2CPP::ExportCall::TypeFromClass((void *)this);
         }
 
         void *BaseType()
         {
-            return IL2CPP::ExportCall::ClassEnumBasetype(this->handle);
+            return IL2CPP::ExportCall::ClassEnumBasetype((void *)this);
         }
 
-        std::vector<IL2CPP::Class> NestedClasses()
+        std::vector<IL2CPP::Class *> NestedClasses()
         {
-            std::vector<IL2CPP::Class> arr;
+            std::vector<IL2CPP::Class *> arr;
             void *iterator = nullptr;
-            void *m_handle = IL2CPP::ExportCall::ClassNestedClasses(this->handle, &iterator);
+            void *m_handle = IL2CPP::ExportCall::ClassNestedClasses((void *)this, &iterator);
             while (m_handle != NULL)
             {
-                arr.push_back(IL2CPP::Class(m_handle));
-                m_handle = IL2CPP::ExportCall::ClassNestedClasses(this->handle, &iterator);
+                arr.push_back((IL2CPP::Class *)m_handle);
+                m_handle = IL2CPP::ExportCall::ClassNestedClasses((void *)this, &iterator);
             }
 
             return arr;
         }
 
-        IL2CPP::Class Nested(const char *name)
+        IL2CPP::Class *Nested(const char *name)
         {
-            std::vector<IL2CPP::Class> vec{this->NestedClasses()};
+            std::vector<IL2CPP::Class *> vec{this->NestedClasses()};
             if (vec.size() == 0)
             {
-                return IL2CPP::Class(nullptr);
+                return (IL2CPP::Class *)nullptr;
             }
 
             for (auto klass : vec)
             {
-                if (strcmp(klass.Name(), name) == 0)
+                if (strcmp(klass->Name(), name) == 0)
                 {
                     return klass;
                     break;
                 }
             }
         }
-
-    private:
-        void *handle;
     };
 
-    class Object
+    struct Object
     {
     public:
-        Object(void *address)
-        {
-            this->handle = address;
-        }
-
         // Returns class of object.
-        IL2CPP::Class Class()
+        IL2CPP::Class *Class()
         {
-            return IL2CPP::ExportCall::ObjectGetClass(this->handle);
+            return (IL2CPP::Class *)IL2CPP::ExportCall::ObjectGetClass((void *)this);
         }
 
-        static IL2CPP::Object New(void *klass)
+        static IL2CPP::Object *New(IL2CPP::Class *klass)
         {
-            return IL2CPP::Object(IL2CPP::ExportCall::ObjectNew(klass));
+            return (IL2CPP::Object *)IL2CPP::ExportCall::ObjectNew((void *)klass);
         }
 
-        static IL2CPP::Object New(IL2CPP::Class klass)
+        IL2CPP::Field *Field(const char *name)
         {
-            return IL2CPP::Object(IL2CPP::ExportCall::ObjectNew(klass.Address()));
+            return (IL2CPP::Field *)(IL2CPP::ExportCall::FieldFromName((void *)(this->Class()), name));
         }
-
-        IL2CPP::Field Field(const char *name)
-        {
-            return IL2CPP::Field(IL2CPP::ExportCall::FieldFromName(this->Class().Address(), name), this->handle);
-        }
-
-    private:
-        void *handle;
     };
 
-    class Type
+    struct Type
     {
     public:
-        Type(void *address)
+        IL2CPP::Class *Class()
         {
-            this->handle = address;
+            return (IL2CPP::Class *)IL2CPP::ExportCall::ClassFromType((void *)this);
         }
-
-        void *Address()
-        {
-            return this->handle;
-        }
-
-        IL2CPP::Class Class()
-        {
-            return IL2CPP::Class(IL2CPP::ExportCall::ClassFromType(this->handle));
-        }
-
-    private:
-        void *handle;
     };
 }

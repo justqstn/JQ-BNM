@@ -5,15 +5,9 @@
 
 namespace IL2CPP
 {
-    class Field
+    struct Field
     {
     public:
-        Field(void *address, void *_instance = nullptr)
-        {
-            this->handle = address;
-            this->instance = _instance;
-        }
-
         enum class Attributes
         {
             FieldAccessMask = 0x0007,
@@ -40,7 +34,7 @@ namespace IL2CPP
         // erm what the sigma
         int Flags()
         {
-            return IL2CPP::ExportCall::FieldGetFlags(this->handle);
+            return IL2CPP::ExportCall::FieldGetFlags((void *)this);
         }
         bool isStatic()
         {
@@ -49,23 +43,18 @@ namespace IL2CPP
 
         int Offset()
         {
-            return IL2CPP::ExportCall::FieldGetOffset(this->handle);
-        }
-
-        void *Address()
-        {
-            return this->handle;
+            return IL2CPP::ExportCall::FieldGetOffset((void *)this);
         }
 
         template <typename T>
         // Returns value of static field. After getting value cast it to needed type. If field non-static you'll get nullptr;
-        T Value()
+        T GetValue(void *instance = nullptr)
         {
             if (this->isStatic())
             {
-                if (this->instance == nullptr)
+                if (instance == nullptr)
                 {
-                    return (T)IL2CPP::ExportCall::GetStaticFieldValue(this->handle);
+                    return (T)IL2CPP::ExportCall::GetStaticFieldValue((void *)this);
                 }
                 else
                 {
@@ -75,17 +64,13 @@ namespace IL2CPP
             }
             else
             {
-                return *(T *)((uint64_t)this->instance + (uint64_t)this->Offset());
+                return *(T *)((uint64_t)instance + (uint64_t)this->Offset());
             }
         }
 
         const char *Name()
         {
-            return IL2CPP::ExportCall::FieldGetName(this->handle);
+            return IL2CPP::ExportCall::FieldGetName((void *)this);
         }
-
-    private:
-        void *handle;
-        void *instance;
     };
 }
