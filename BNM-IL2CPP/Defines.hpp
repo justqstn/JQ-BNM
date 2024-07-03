@@ -1,6 +1,5 @@
-#include "../Logger/Logger.h"
-
-void __log(const char* log) {
+void __log(const char *log)
+{
     return;
 }
 // Debug function
