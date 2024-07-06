@@ -47,7 +47,7 @@ namespace IL2CPP
         }
 
         template <typename T>
-        // Returns value of static field. After getting value cast it to needed type. If field non-static you'll get nullptr;
+        // Returns value of  field. If field is non-static you need to pass instance parameter
         T GetValue(void *instance = nullptr)
         {
             if (this->isStatic())
@@ -62,9 +62,43 @@ namespace IL2CPP
                     return NULL;
                 }
             }
+            else if (instance == nullptr)
+            {
+                LOG_ERROR("Error: trying getting non-static field " + std::string(this->Name()) + " without instance, returning nullptr.");
+                return nullptr;
+            }
             else
             {
                 return *(T *)((uint64_t)instance + (uint64_t)this->Offset());
+            }
+        }
+
+        template <typename T>
+        // Sets value of field. If field non-static you need to pass instance parameter
+        void SetValue(T value, void *instance = nullptr)
+        {
+            if (this->isStatic())
+            {
+                if (instance == nullptr)
+                {
+                    (T) IL2CPP::ExportCall::FieldStaticSetValue((void *)this, (void *)value);
+                    return;
+                }
+                else
+                {
+                    LOG_ERROR("Error: trying setting static field " + std::string(this->Name()) + " of instancer.");
+                    return;
+                }
+            }
+            else if (instance == nullptr)
+            {
+                LOG_ERROR("Error: trying setting non-static field " + std::string(this->Name()) + " without instance.");
+                return;
+            }
+            else
+            {
+                *(T *)((uint64_t)instance + (uint64_t)this->Offset()) = value;
+                return;
             }
         }
 

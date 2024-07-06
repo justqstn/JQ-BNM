@@ -54,6 +54,9 @@ namespace IL2CPP
                 {IL2CPP_CLASS_FROM_TYPE, &Exports::m_IL2CPP_CLASS_FROM_TYPE},
                 {IL2CPP_CLASS_NESTED_CLASSES, &Exports::m_IL2CPP_CLASS_NESTED_CLASSES},
                 {IL2CPP_ALLOC, &Exports::m_IL2CPP_ALLOC},
+                {IL2CPP_TYPE_GET_OBJECT, &Exports::m_IL2CPP_TYPE_GET_OBJECT},
+                {IL2CPP_FIELD_STATIC_SET_VALUE, &Exports::m_IL2CPP_FIELD_STATIC_SET_VALUE},
+                {IL2CPP_CLASS_FROM_SYSTEM_TYPE, &Exports::m_IL2CPP_CLASS_FROM_SYSTEM_TYPE},
             };
         for (auto &p : ExportMap)
         {

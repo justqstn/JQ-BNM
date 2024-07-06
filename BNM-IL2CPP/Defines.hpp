@@ -1,12 +1,10 @@
-void __log(const char *log)
-{
-    return;
-}
+#include "../Logger/Logger.h"
+
 // Debug function
-#define LOG_DEBUG __log
+#define LOG_DEBUG Logger::log_debug
 
 // Error function
-#define LOG_ERROR __log
+#define LOG_ERROR Logger::log_err
 
 #ifdef _WIN64
 #define IL2CPP_CALLING_CONVENTION __fastcall *
@@ -44,3 +42,6 @@ void __log(const char *log)
 #define IL2CPP_TYPE_FROM_CLASS "il2cpp_class_get_type"
 #define IL2CPP_CLASS_NESTED_CLASSES "il2cpp_class_get_nested_types"
 #define IL2CPP_ALLOC "il2cpp_alloc"
+#define IL2CPP_FIELD_STATIC_SET_VALUE "il2cpp_field_static_set_value"
+#define IL2CPP_TYPE_GET_OBJECT "il2cpp_type_get_object"
+#define IL2CPP_CLASS_FROM_SYSTEM_TYPE "il2cpp_class_from_system_type"

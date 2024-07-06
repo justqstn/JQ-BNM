@@ -154,5 +154,19 @@ namespace IL2CPP
         {
             return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(size_t)>(Exports::m_IL2CPP_ALLOC)(size);
         }
+
+        void FieldStaticSetValue(void *field, void *value)
+        {
+            return reinterpret_cast<void(IL2CPP_CALLING_CONVENTION)(void *, void *)>(Exports::m_IL2CPP_FIELD_STATIC_SET_VALUE)(field, value);
+        }
+
+        void *TypeGetObject(void *type)
+        {
+            return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_TYPE_GET_OBJECT)(type);
+        }
+
+        void* ClassFromSystemType(void* runtimetype) {
+            return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_CLASS_FROM_SYSTEM_TYPE)(runtimetype);
+        }
     }
 }

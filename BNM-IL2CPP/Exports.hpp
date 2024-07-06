@@ -36,5 +36,8 @@ namespace IL2CPP
         void *m_IL2CPP_TYPE_FROM_CLASS{nullptr};
         void *m_IL2CPP_CLASS_NESTED_CLASSES{nullptr};
         void *m_IL2CPP_ALLOC{nullptr};
+        void *m_IL2CPP_FIELD_STATIC_SET_VALUE{nullptr};
+        void *m_IL2CPP_TYPE_GET_OBJECT{nullptr};
+        void *m_IL2CPP_CLASS_FROM_SYSTEM_TYPE{nullptr};
     }
 }

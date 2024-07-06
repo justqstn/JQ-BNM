@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../ExportCall.hpp"
+#include "../../Offsets.hpp"
 #include "Method.hpp"
 #include "Field.hpp"
 #include <vector>
@@ -74,6 +75,24 @@ namespace IL2CPP
                     break;
                 }
             }
+        }
+
+        // Returns generic instance of generic class with given parameters
+        IL2CPP::Class *Inflate(std::vector<IL2CPP::Class *> types)
+        {
+            void *il2cpp_array_types = IL2CPP::ExportCall::ArrayNew(IL2CPP::ExportCall::ClassFromName(IL2CPP::ExportCall::AssemblyGetImage(IL2CPP::ExportCall::GetAssemblyFromDomain(IL2CPP::ExportCall::GetDomain(), "mscorlib")), "System", "Type"), types.size());
+            void *str = IL2CPP::ExportCall::StringNew("v");
+            void *(*toCharArray)(void *) = (void *(*)(void *))((((IL2CPP::Method *)(IL2CPP::ExportCall::MethodFromName(IL2CPP::ExportCall::ClassFromName(IL2CPP::ExportCall::AssemblyGetImage(IL2CPP::ExportCall::GetAssemblyFromDomain(IL2CPP::ExportCall::GetDomain(), "mscorlib")), "System", "String"), "ToCharArray", 0)))->VA()));
+            void *charArray = toCharArray(str);
+            uint64_t offset = IL2CPP::Offsets::offsetOfCharArray(charArray, 118);
+            void *array_elements = (void *)((uint64_t)il2cpp_array_types + offset);
+            for (int i = 0; i < types.size(); i++)
+            {
+                *(void **)((uint64_t)array_elements + i * sizeof(void *)) = IL2CPP::ExportCall::TypeGetObject((types.at(i))->Type());
+            }
+            IL2CPP::Method *MakeGenericType_method = ((IL2CPP::Class *)(IL2CPP::ExportCall::ObjectGetClass(IL2CPP::ExportCall::TypeGetObject(this->Type()))))->Method("MakeGenericType", 1);
+            void *(*MakeGenericType)(void *, void *) = (void *(*)(void *, void *))((void *)(MakeGenericType_method->VA()));
+            return (IL2CPP::Class *)(IL2CPP::ExportCall::ClassFromSystemType(MakeGenericType((IL2CPP::ExportCall::TypeGetObject(this->Type())), il2cpp_array_types)));
         }
     };
 
