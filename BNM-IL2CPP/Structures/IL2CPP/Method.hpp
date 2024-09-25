@@ -2,6 +2,9 @@
 
 #include "../../ExportCall.hpp"
 #include "../../Offsets.hpp"
+#include <initializer_list>
+#include <any>
+#include <string>
 
 namespace IL2CPP
 {
@@ -47,10 +50,13 @@ namespace IL2CPP
             // hello im from sigma department
             void *SR_Module = IL2CPP::ExportCall::ClassFromName(IL2CPP::ExportCall::AssemblyGetImage(IL2CPP::ExportCall::GetAssemblyFromDomain(IL2CPP::ExportCall::GetDomain(), "mscorlib")), "System.Reflection", "Module");
             IL2CPP::ExportCall::RuntimeClassInit(SR_Module);
+
             void *FilterTypeName_obj = IL2CPP::ExportCall::GetStaticFieldValue(IL2CPP::ExportCall::FieldFromName(SR_Module, "FilterTypeName"));
             void *FilterTypeName_klass = IL2CPP::ExportCall::ObjectGetClass(FilterTypeName_obj);
+
             int method_offset = IL2CPP::ExportCall::FieldGetOffset(IL2CPP::ExportCall::FieldFromName(FilterTypeName_klass, "method"));
             int method_ptr_offset = IL2CPP::ExportCall::FieldGetOffset(IL2CPP::ExportCall::FieldFromName(FilterTypeName_klass, "method_ptr"));
+
             void *FilterTypeName_method = (void *)((uint64_t)FilterTypeName_obj + method_offset);
             void *FilterTypeName_method_ptr = (void *)((uint64_t)FilterTypeName_obj + method_ptr_offset);
 
@@ -60,6 +66,7 @@ namespace IL2CPP
                 LOG_ERROR("Couldn't find the VA of method " + std::string(this->Name()) + "(). You can try increase \"depth\" value in IL2CPPResolver2.0/Structures/IL2CPP/Method.hpp/Method::offsetOf or kys.");
                 return 0;
             }
+
             uint64_t result = (uint64_t)(*(void **)((uint64_t)offset + (uint64_t)this));
             return result;
         }
@@ -69,5 +76,22 @@ namespace IL2CPP
         {
             return (uint64_t)(this->VA()) - (uint64_t)IL2CPP::Exports::GameAssembly;
         }
+
+        bool isInflated()
+        {
+            return IL2CPP::ExportCall::MethodIsInflated((void *)this);
+        }
+        /*
+        template <typename T, class... Args>
+        T MethodData(*arg(Args... args))()
+        {
+            return (T(*)(Args...))(this->VA());
+        }
+
+        template <typename T, class... Args>
+        T Invoke(Args... args)
+        {
+            return (T(*)(Args...))(this->VA())(args...);
+        }*/
     };
 }

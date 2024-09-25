@@ -165,8 +165,19 @@ namespace IL2CPP
             return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_TYPE_GET_OBJECT)(type);
         }
 
-        void* ClassFromSystemType(void* runtimetype) {
+        void *ClassFromSystemType(void *runtimetype)
+        {
             return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_CLASS_FROM_SYSTEM_TYPE)(runtimetype);
         }
+
+        bool MethodIsInflated(void *method)
+        {
+            return reinterpret_cast<bool(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_METHOD_IS_INFLATED)(method);
+        }
+
+        void *ValueBox(void *value, void *klass)
+        {
+            return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *, void *)>(Exports::m_IL2CPP_VALUE_BOX)(value, klass);
+        } // короче надо дописать экспорты а потом их добавить в BNM.hpp
     }
 }

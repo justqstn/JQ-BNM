@@ -114,6 +114,11 @@ namespace IL2CPP
         {
             return (IL2CPP::Field *)(IL2CPP::ExportCall::FieldFromName((void *)(this->Class()), name));
         }
+
+        IL2CPP::Object *Box()
+        {
+            return (IL2CPP::Object *)(IL2CPP::ExportCall::ValueBox((void *)this, (void *)this->Class()->Type()));
+        }
     };
 
     struct Type

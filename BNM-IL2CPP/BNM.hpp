@@ -4,6 +4,7 @@
 #include "Structures/IL2CPP/Domain.hpp"
 #include "Structures/IL2CPP/String.hpp"
 #include "Structures/IL2CPP/Array.hpp"
+#include "Structures/UnityEngine.hpp"
 
 #include <Windows.h>
 #include <memoryapi.h>

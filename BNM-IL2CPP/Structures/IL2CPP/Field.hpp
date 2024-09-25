@@ -62,11 +62,6 @@ namespace IL2CPP
                     return NULL;
                 }
             }
-            else if (instance == nullptr)
-            {
-                LOG_ERROR("Error: trying getting non-static field " + std::string(this->Name()) + " without instance, returning nullptr.");
-                return nullptr;
-            }
             else
             {
                 return *(T *)((uint64_t)instance + (uint64_t)this->Offset());
@@ -81,7 +76,7 @@ namespace IL2CPP
             {
                 if (instance == nullptr)
                 {
-                    (T) IL2CPP::ExportCall::FieldStaticSetValue((void *)this, (void *)value);
+                    IL2CPP::ExportCall::FieldStaticSetValue((void *)this, (void *)value);
                     return;
                 }
                 else
@@ -89,11 +84,6 @@ namespace IL2CPP
                     LOG_ERROR("Error: trying setting static field " + std::string(this->Name()) + " of instancer.");
                     return;
                 }
-            }
-            else if (instance == nullptr)
-            {
-                LOG_ERROR("Error: trying setting non-static field " + std::string(this->Name()) + " without instance.");
-                return;
             }
             else
             {

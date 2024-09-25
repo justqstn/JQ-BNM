@@ -45,3 +45,5 @@
 #define IL2CPP_FIELD_STATIC_SET_VALUE "il2cpp_field_static_set_value"
 #define IL2CPP_TYPE_GET_OBJECT "il2cpp_type_get_object"
 #define IL2CPP_CLASS_FROM_SYSTEM_TYPE "il2cpp_class_from_system_type"
+#define IL2CPP_METHOD_IS_INFLATED "il2cpp_method_is_inflated"
+#define IL2CPP_VALUE_BOX "il2cpp_value_box"

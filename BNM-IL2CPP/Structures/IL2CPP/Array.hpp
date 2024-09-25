@@ -42,7 +42,7 @@ namespace IL2CPP
             return ((IL2CPP::Class *)(this->ElementType()))->ElementSize();
         }
 
-        void *Elements()
+        void **Elements()
         {
             void *str = IL2CPP::ExportCall::StringNew("v");
             void *(*toCharArray)(void *) = (void *(*)(void *))((((IL2CPP::Method *)(IL2CPP::ExportCall::MethodFromName(IL2CPP::ExportCall::ClassFromName(IL2CPP::ExportCall::AssemblyGetImage(IL2CPP::ExportCall::GetAssemblyFromDomain(IL2CPP::ExportCall::GetDomain(), "mscorlib")), "System", "String"), "ToCharArray", 0)))->VA()));
@@ -50,7 +50,7 @@ namespace IL2CPP
             uint64_t offset = IL2CPP::Offsets::offsetOfCharArray(charArray, 118);
 
             uint64_t addr = (uint64_t)this + offset;
-            return (void *)addr;
+            return (void **)addr;
         }
 
         template <typename T>
