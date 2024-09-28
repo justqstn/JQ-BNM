@@ -13,7 +13,7 @@ int main()
     Getting assemblies and images of assemblies
     */
 
-    IL2CPP::Assembly *__AssemblyCSharp = IL2CPP::Domain()->Assembly("Assembly-CSharp");
+    IL2CPP::Assembly *__AssemblyCSharp = IL2CPP::Domain().Assembly("Assembly-CSharp"); 
     IL2CPP::Image *AssemblyCSharp = __AssemblyCSharp->Image();
 
     IL2CPP::Assembly *__mscorlib = IL2CPP::Domain()->Assembly("mscorlib");
