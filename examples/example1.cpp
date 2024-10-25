@@ -57,8 +57,8 @@ int main()
     */
 
     IL2CPP::Method *PixelTime_Update = AssemblyCSharp->Class("PixelTime")->Method("Update");
-    uint64_t PixelTime_Update_VA = PixelTime_Update->VA();   // Value address
-    uint64_t PixelTime_Update_RVA = PixelTime_Update->RVA(); // Relative value address (offset)
+    uint64_t PixelTime_Update_VA = PixelTime_Update->VA();   // Virtual address
+    uint64_t PixelTime_Update_RVA = PixelTime_Update->RVA(); // Relative virtual address (offset)
     const char *PixelTime_Update_Name = PixelTime_Update.Name();
 
     /*
