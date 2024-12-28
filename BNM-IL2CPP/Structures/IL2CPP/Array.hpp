@@ -3,9 +3,13 @@
 #include "../../ExportCall.hpp"
 #include "../../Offsets.hpp"
 #include "Class.hpp"
+#include "Object.hpp"
 #include "Method.hpp"
+#include "String.hpp"
 #include <cstdint>
 #include <string>
+
+// sex
 
 namespace IL2CPP
 {
@@ -34,7 +38,7 @@ namespace IL2CPP
 
         IL2CPP::Type *ElementType()
         {
-            return (IL2CPP::Type *)(((IL2CPP::Type *)(this->Object()->Class()->Type()))->Class()->BaseType());
+            return this->Object()->Class()->Type()->Class()->BaseType();
         }
 
         int ElementSize()
@@ -42,27 +46,26 @@ namespace IL2CPP
             return ((IL2CPP::Class *)(this->ElementType()))->ElementSize();
         }
 
-        void **Elements()
+        template <typename T>
+        T *Elements()
         {
-            void *str = IL2CPP::ExportCall::StringNew("v");
-            void *(*toCharArray)(void *) = (void *(*)(void *))((((IL2CPP::Method *)(IL2CPP::ExportCall::MethodFromName(IL2CPP::ExportCall::ClassFromName(IL2CPP::ExportCall::AssemblyGetImage(IL2CPP::ExportCall::GetAssemblyFromDomain(IL2CPP::ExportCall::GetDomain(), "mscorlib")), "System", "String"), "ToCharArray", 0)))->VA()));
-            void *charArray = toCharArray(str);
-            uint64_t offset = IL2CPP::Offsets::offsetOfCharArray(charArray, 118);
-
+            IL2CPP::Object *str = (IL2CPP::Object *)IL2CPP::String::New("v");
+            IL2CPP::Object *charArray = str->Method("ToCharArray", 0).Invoke<IL2CPP::Object *>();
+            uint64_t offset = IL2CPP::Offsets::offsetOfCharArray((void *)charArray, 118);
             uint64_t addr = (uint64_t)this + offset;
-            return (void **)addr;
+            return (T *)addr;
         }
 
         template <typename T>
         T Get(int index)
         {
-            return *(T *)((uint64_t)this->Elements() + index * this->ElementSize());
+            return this->Elements<T>()[index];
         }
 
         template <typename T>
         void Set(int index, T value)
         {
-            *(T *)((uint64_t)this->Elements() + index * this->ElementSize()) = value;
+            this->Elements<T>()[index] = value;
         }
     };
 }

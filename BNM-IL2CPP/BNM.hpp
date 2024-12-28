@@ -4,7 +4,11 @@
 #include "Structures/IL2CPP/Domain.hpp"
 #include "Structures/IL2CPP/String.hpp"
 #include "Structures/IL2CPP/Array.hpp"
+#include "Structures/IL2CPP/Class.hpp"
+#include "Structures/IL2CPP/Method.hpp"
 #include "Structures/UnityEngine.hpp"
+
+#include "Defines.hpp"
 
 #include <Windows.h>
 #include <memoryapi.h>
@@ -58,10 +62,21 @@ namespace IL2CPP
                 {IL2CPP_TYPE_GET_OBJECT, &Exports::m_IL2CPP_TYPE_GET_OBJECT},
                 {IL2CPP_FIELD_STATIC_SET_VALUE, &Exports::m_IL2CPP_FIELD_STATIC_SET_VALUE},
                 {IL2CPP_CLASS_FROM_SYSTEM_TYPE, &Exports::m_IL2CPP_CLASS_FROM_SYSTEM_TYPE},
-            };
+                {IL2CPP_METHOD_IS_INSTANCE, &Exports::m_IL2CPP_METHOD_IS_INSTANCE},
+                {IL2CPP_FIELD_GET_PARENT, &Exports::m_IL2CPP_FIELD_GET_PARENT},
+                {IL2CPP_METHOD_GET_CLASS, &Exports::m_IL2CPP_METHOD_GET_CLASS},
+                {IL2CPP_CLASS_GET_METHODS, &Exports::m_IL2CPP_CLASS_GET_METHODS},
+                {IL2CPP_CLASS_GET_FIELDS, &Exports::m_IL2CPP_CLASS_GET_FIELDS},
+                {IL2CPP_METHOD_GET_PARAM_COUNT, &Exports::m_IL2CPP_METHOD_GET_PARAM_COUNT},
+                {IL2CPP_METHOD_GET_PARAM_TYPE, &Exports::m_IL2CPP_METHOD_GET_PARAM_TYPE},
+                {IL2CPP_METHOD_GET_PARAM_NAME, &Exports::m_IL2CPP_METHOD_GET_PARAM_NAME},
+                {IL2CPP_TYPE_GET_NAME, &Exports::m_IL2CPP_TYPE_GET_NAME}};
+
         for (auto &p : ExportMap)
         {
             *p.second = ResolveExport(p.first.c_str());
+            if ((uint64_t)*p.second == 0)
+                LOG_ERROR(p.first + " is not found!");
         }
     };
 }

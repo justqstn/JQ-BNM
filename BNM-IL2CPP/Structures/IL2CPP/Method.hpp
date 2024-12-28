@@ -2,15 +2,91 @@
 
 #include "../../ExportCall.hpp"
 #include "../../Offsets.hpp"
+#include "Type.hpp"
 #include <initializer_list>
 #include <any>
 #include <string>
 
 namespace IL2CPP
 {
-    struct Method
+    struct Type;
+    struct Parameter
+    {
+        IL2CPP::Type *type;
+        const char *name;
+
+        std::string ToString()
+        {
+            return this->type->Name() + std::string(" ") + this->name;
+        }
+    };
+
+    class Method
     {
     public:
+        template <typename T>
+        Method(T handle)
+        {
+            this->instance = (void *)handle;
+            this->object_instance = nullptr;
+        }
+
+        template <typename T, typename T2>
+        Method(T handle, T2 object)
+        {
+            this->instance = (void *)handle;
+            this->object_instance = (void *)object;
+        }
+
+        template <typename T>
+        operator T()
+        {
+            return (T)this->instance;
+        }
+
+        void SetObjectInstance(void *instance)
+        {
+            this->object_instance = instance;
+        }
+
+        uint32_t ParametersCount()
+        {
+            return IL2CPP::ExportCall::MethodGetParamCount(this->instance);
+        }
+
+        std::vector<Parameter> Parameters()
+        {
+            std::vector<Parameter> result;
+            uint32_t parameter_count = this->ParametersCount();
+
+            if (parameter_count == 0)
+                return result;
+
+            for (uint32_t i = 0; i < parameter_count; i++)
+            {
+                Parameter param;
+
+                param.name = IL2CPP::ExportCall::MethodGetParamName(this->instance, i);
+                param.type = (IL2CPP::Type *)IL2CPP::ExportCall::MethodGetParamType(this->instance, i);
+
+                result.push_back(param);
+            }
+
+            return result;
+        }
+
+        std::string ToString()
+        {
+            std::string result;
+            if (this->isStatic())
+                result += "static ";
+            std::vector<Parameter> parameters;
+            for (auto it : parameters)
+            {
+                result +
+            }
+        }
+
         enum class Attributes
         {
             MemberAccessMask = 0x0007,
@@ -41,10 +117,10 @@ namespace IL2CPP
 
         const char *Name()
         {
-            return IL2CPP::ExportCall::MethodGetName((void *)this);
+            return IL2CPP::ExportCall::MethodGetName(this->instance);
         }
 
-        // Returns Virtual Address of method - it's RVA (offset)+maindll address.
+        // Returns Value Address of method - it's RVA (offset)+maindll address.
         uint64_t VA()
         {
             // hello im from sigma department
@@ -67,11 +143,11 @@ namespace IL2CPP
                 return 0;
             }
 
-            uint64_t result = (uint64_t)(*(void **)((uint64_t)offset + (uint64_t)this));
+            uint64_t result = (uint64_t)(*(void **)((uint64_t)offset + (uint64_t)this->instance));
             return result;
         }
 
-        // Returns Relative Virtual Address of method - it's VA-maindll address.
+        // Returns Relative Value Address of method - it's VA-maindll address.
         uint64_t RVA()
         {
             return (uint64_t)(this->VA()) - (uint64_t)IL2CPP::Exports::GameAssembly;
@@ -79,19 +155,39 @@ namespace IL2CPP
 
         bool isInflated()
         {
-            return IL2CPP::ExportCall::MethodIsInflated((void *)this);
-        }
-        /*
-        template <typename T, class... Args>
-        T MethodData(*arg(Args... args))()
-        {
-            return (T(*)(Args...))(this->VA());
+            return IL2CPP::ExportCall::MethodIsInflated(this->instance);
         }
 
-        template <typename T, class... Args>
+        bool isStatic()
+        {
+            return !IL2CPP::ExportCall::MethodIsInstance(this->instance);
+        }
+
+        template <typename T, typename... Args>
         T Invoke(Args... args)
         {
-            return (T(*)(Args...))(this->VA())(args...);
-        }*/
+            if (this->isStatic())
+            {
+
+                if (this->object_instance != nullptr)
+                {
+                    LOG_ERROR(std::string("Error: Couldn't invoke static method \"") + this->Name() + std::string("\" from IL2CPP::Object."));
+                    return (T)0;
+                }
+                return ((T(*)(Args...))(this->VA()))(args...);
+            }
+            else
+            {
+                if (this->object_instance == nullptr)
+                {
+                    LOG_ERROR(std::string("Error: Couldn't invoke non-static method \"") + this->Name() + std::string("\"from IL2CPP::Class instance, use IL2CPP::Object instance instead."));
+                    return (T)0;
+                }
+                return ((T(*)(void *, Args...))(this->VA()))(this->object_instance, args...);
+            }
+        }
+
+        void *instance;
+        void *object_instance;
     };
 }

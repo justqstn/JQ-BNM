@@ -5,9 +5,34 @@
 
 namespace IL2CPP
 {
-    struct Field
+    class Field
     {
     public:
+        template <typename T>
+        Field(T handle)
+        {
+            this->instance = (void *)handle;
+            this->object_instance = nullptr;
+        }
+
+        template <typename T, typename T2>
+        Field(T handle, T2 object)
+        {
+            this->instance = (void *)handle;
+            this->object_instance = (void *)object;
+        }
+
+        template <typename T>
+        operator T()
+        {
+            return (T)this->instance;
+        }
+
+        void SetObjectInstance(void *instance)
+        {
+            this->object_instance = instance;
+        }
+
         enum class Attributes
         {
             FieldAccessMask = 0x0007,
@@ -34,7 +59,7 @@ namespace IL2CPP
         // erm what the sigma
         int Flags()
         {
-            return IL2CPP::ExportCall::FieldGetFlags((void *)this);
+            return IL2CPP::ExportCall::FieldGetFlags(this->instance);
         }
         bool isStatic()
         {
@@ -43,58 +68,65 @@ namespace IL2CPP
 
         int Offset()
         {
-            return IL2CPP::ExportCall::FieldGetOffset((void *)this);
+            return IL2CPP::ExportCall::FieldGetOffset(this->instance);
         }
 
         template <typename T>
         // Returns value of  field. If field is non-static you need to pass instance parameter
-        T GetValue(void *instance = nullptr)
+        T GetValue()
         {
             if (this->isStatic())
             {
-                if (instance == nullptr)
+                if (this->object_instance != nullptr)
                 {
-                    return (T)IL2CPP::ExportCall::GetStaticFieldValue((void *)this);
+                    LOG_ERROR("Error: Trying getting static field " + std::string(this->Name()) + " of IL2CPP::Object instance, use IL2CPP::Class instead.");
+                    return T(0);
                 }
-                else
-                {
-                    LOG_ERROR("Error: trying getting static field " + std::string(this->Name()) + " of instance, returning nullptr.");
-                    return NULL;
-                }
+                return (T)IL2CPP::ExportCall::GetStaticFieldValue(this->instance);
             }
             else
             {
-                return *(T *)((uint64_t)instance + (uint64_t)this->Offset());
+                if (this->object_instance == nullptr)
+                {
+                    LOG_ERROR("Error: Trying getting non-static field " + std::string(this->Name()) + " of IL2CPP::Class instance, use IL2CPP::Object instead.");
+                }
+                return *(T *)((uint64_t)this->object_instance + (uint64_t)this->Offset());
             }
         }
 
         template <typename T>
         // Sets value of field. If field non-static you need to pass instance parameter
-        void SetValue(T value, void *instance = nullptr)
+        void SetValue(T value)
         {
             if (this->isStatic())
             {
-                if (instance == nullptr)
+                if (this->object_instance != nullptr)
                 {
-                    IL2CPP::ExportCall::FieldStaticSetValue((void *)this, (void *)value);
+                    LOG_ERROR("Error: Trying setting static field " + std::string(this->Name()) + " of IL2CPP::Object instance, use IL2CPP::Class instead.");
                     return;
                 }
-                else
-                {
-                    LOG_ERROR("Error: trying setting static field " + std::string(this->Name()) + " of instancer.");
-                    return;
-                }
+                IL2CPP::ExportCall::FieldStaticSetValue(this->instance, (void *)value);
+                return;
             }
             else
             {
-                *(T *)((uint64_t)instance + (uint64_t)this->Offset()) = value;
+                if (this->object_instance == nullptr)
+                {
+                    LOG_ERROR("Error: Trying setting non-static field " + std::string(this->Name()) + " of IL2CPP::Class instance, use IL2CPP::Object instead.");
+                    return;
+                }
+                *(T *)((uint64_t)this->object_instance + (uint64_t)this->Offset()) = value;
                 return;
             }
         }
 
         const char *Name()
         {
-            return IL2CPP::ExportCall::FieldGetName((void *)this);
+            return IL2CPP::ExportCall::FieldGetName(this->instance);
         }
+
+    private:
+        void *instance;
+        void *object_instance;
     };
 }

@@ -4,11 +4,15 @@
 #include "../../Offsets.hpp"
 #include "Method.hpp"
 #include "Field.hpp"
+#include "Object.hpp"
+#include "Type.hpp"
 #include <vector>
 #include <algorithm>
 
 namespace IL2CPP
 {
+    struct Object;
+    struct Type;
     struct Class
     {
     public:
@@ -17,16 +21,20 @@ namespace IL2CPP
             return IL2CPP::ExportCall::ClassGetName((void *)this);
         }
 
-        // Return method of class by the name and parameter count
-        IL2CPP::Method *Method(const char *name, int parameter_count = -1)
+        IL2CPP::Object *New()
         {
-            return (IL2CPP::Method *)IL2CPP::ExportCall::MethodFromName((void *)this, name, parameter_count);
+            return (IL2CPP::Object *)IL2CPP::ExportCall::ObjectNew((void *)this);
+        }
+        // Return method of class by the name and parameter count
+        IL2CPP::Method Method(const char *name, int parameter_count = -1)
+        {
+            return IL2CPP::Method(IL2CPP::ExportCall::MethodFromName((void *)this, name, parameter_count));
         }
 
         // Return field of class by the name
-        IL2CPP::Field *Field(const char *name)
+        IL2CPP::Field Field(const char *name)
         {
-            return (IL2CPP::Field *)(IL2CPP::ExportCall::FieldFromName((void *)this, name));
+            return IL2CPP::Field(IL2CPP::ExportCall::FieldFromName((void *)this, name));
         }
 
         // Returns size of erm what the sigma
@@ -35,14 +43,14 @@ namespace IL2CPP
             return IL2CPP::ExportCall::ClassArrayElementSize((void *)this);
         }
 
-        void *Type()
+        IL2CPP::Type *Type()
         {
-            return IL2CPP::ExportCall::TypeFromClass((void *)this);
+            return (IL2CPP::Type *)IL2CPP::ExportCall::TypeFromClass((void *)this);
         }
 
-        void *BaseType()
+        IL2CPP::Type *BaseType()
         {
-            return IL2CPP::ExportCall::ClassEnumBasetype((void *)this);
+            return (IL2CPP::Type *)IL2CPP::ExportCall::ClassEnumBasetype((void *)this);
         }
 
         std::vector<IL2CPP::Class *> NestedClasses()
@@ -54,6 +62,34 @@ namespace IL2CPP
             {
                 arr.push_back((IL2CPP::Class *)m_handle);
                 m_handle = IL2CPP::ExportCall::ClassNestedClasses((void *)this, &iterator);
+            }
+
+            return arr;
+        }
+
+        std::vector<IL2CPP::Method> Methods()
+        {
+            std::vector<IL2CPP::Method> arr;
+            void *iterator = nullptr;
+            void *m_handle = IL2CPP::ExportCall::ClassGetMethods((void *)this, &iterator);
+            while (m_handle != NULL)
+            {
+                arr.push_back(IL2CPP::Method(m_handle));
+                m_handle = IL2CPP::ExportCall::ClassGetMethods((void *)this, &iterator);
+            }
+
+            return arr;
+        }
+
+        std::vector<IL2CPP::Field> Fields()
+        {
+            std::vector<IL2CPP::Field> arr;
+            void *iterator = nullptr;
+            void *m_handle = IL2CPP::ExportCall::ClassGetFields((void *)this, &iterator);
+            while (m_handle != NULL)
+            {
+                arr.push_back(IL2CPP::Field(m_handle));
+                m_handle = IL2CPP::ExportCall::ClassGetFields((void *)this, &iterator);
             }
 
             return arr;
@@ -77,6 +113,11 @@ namespace IL2CPP
             }
         }
 
+        IL2CPP::Type *ReflectionType()
+        {
+            return (IL2CPP::Type *)IL2CPP::ExportCall::TypeGetObject(this->Type());
+        }
+
         // Returns generic instance of generic class with given parameters
         IL2CPP::Class *Inflate(std::vector<IL2CPP::Class *> types)
         {
@@ -93,40 +134,6 @@ namespace IL2CPP
             IL2CPP::Method *MakeGenericType_method = ((IL2CPP::Class *)(IL2CPP::ExportCall::ObjectGetClass(IL2CPP::ExportCall::TypeGetObject(this->Type()))))->Method("MakeGenericType", 1);
             void *(*MakeGenericType)(void *, void *) = (void *(*)(void *, void *))((void *)(MakeGenericType_method->VA()));
             return (IL2CPP::Class *)(IL2CPP::ExportCall::ClassFromSystemType(MakeGenericType((IL2CPP::ExportCall::TypeGetObject(this->Type())), il2cpp_array_types)));
-        }
-    };
-
-    struct Object
-    {
-    public:
-        // Returns class of object.
-        IL2CPP::Class *Class()
-        {
-            return (IL2CPP::Class *)IL2CPP::ExportCall::ObjectGetClass((void *)this);
-        }
-
-        static IL2CPP::Object *New(IL2CPP::Class *klass)
-        {
-            return (IL2CPP::Object *)IL2CPP::ExportCall::ObjectNew((void *)klass);
-        }
-
-        IL2CPP::Field *Field(const char *name)
-        {
-            return (IL2CPP::Field *)(IL2CPP::ExportCall::FieldFromName((void *)(this->Class()), name));
-        }
-
-        IL2CPP::Object *Box()
-        {
-            return (IL2CPP::Object *)(IL2CPP::ExportCall::ValueBox((void *)this, (void *)this->Class()->Type()));
-        }
-    };
-
-    struct Type
-    {
-    public:
-        IL2CPP::Class *Class()
-        {
-            return (IL2CPP::Class *)IL2CPP::ExportCall::ClassFromType((void *)this);
         }
     };
 }

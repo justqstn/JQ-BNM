@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../Logger/Logger.h"
 
 // Debug function
@@ -47,3 +49,12 @@
 #define IL2CPP_CLASS_FROM_SYSTEM_TYPE "il2cpp_class_from_system_type"
 #define IL2CPP_METHOD_IS_INFLATED "il2cpp_method_is_inflated"
 #define IL2CPP_VALUE_BOX "il2cpp_value_box"
+#define IL2CPP_METHOD_IS_INSTANCE "il2cpp_method_is_instance"
+#define IL2CPP_FIELD_GET_PARENT "il2cpp_field_get_parent"
+#define IL2CPP_METHOD_GET_CLASS "il2cpp_method_get_class"
+#define IL2CPP_CLASS_GET_METHODS "il2cpp_class_get_methods"
+#define IL2CPP_CLASS_GET_FIELDS "il2cpp_class_get_fields"
+#define IL2CPP_METHOD_GET_PARAM_COUNT "il2cpp_method_get_param_count"
+#define IL2CPP_METHOD_GET_PARAM_NAME "il2cpp_method_get_param_name"
+#define IL2CPP_METHOD_GET_PARAM_TYPE "il2cpp_method_get_param"
+#define IL2CPP_TYPE_GET_NAME "il2cpp_type_get_name"
