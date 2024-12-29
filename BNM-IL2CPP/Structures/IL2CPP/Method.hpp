@@ -6,6 +6,8 @@
 #include <initializer_list>
 #include <any>
 #include <string>
+#include "../../Utils/Other.hpp"
+#include "../../Utils/MemPattern.hpp"
 
 namespace IL2CPP
 {
@@ -75,16 +77,40 @@ namespace IL2CPP
             return result;
         }
 
-        std::string ToString()
+        IL2CPP::Type *ReturnType()
+        {
+            return (IL2CPP::Type *)IL2CPP::ExportCall::MethodGetReturnType(this->instance);
+        }
+
+        std::string ToString(bool show_offset = true, bool show_pattern = false, int pattern_length = 16)
         {
             std::string result;
+
             if (this->isStatic())
                 result += "static ";
-            std::vector<Parameter> parameters;
+
+            result += std::string(this->ReturnType()->Name()) + " " + this->Name() + "(";
+
+            std::vector<Parameter> parameters = this->Parameters();
+
+            int paramcount = parameters.size();
+
+            int index = 0;
             for (auto it : parameters)
             {
-                result +
+                result += it.ToString();
+
+                if (index++ != paramcount - 1)
+                    result += ", ";
             }
+            result += "); ";
+
+            if (show_offset)
+                result += "// 0x" + BNM::Utils::ToHex(this->RVA()) + "; ";
+
+            if (show_pattern)
+                result += "// " + BNM::Utils::BytesToPattern(BNM::Utils::BytesFromAddress((uint64_t)this->instance, pattern_length));
+            return result;
         }
 
         enum class Attributes
@@ -127,7 +153,7 @@ namespace IL2CPP
             void *SR_Module = IL2CPP::ExportCall::ClassFromName(IL2CPP::ExportCall::AssemblyGetImage(IL2CPP::ExportCall::GetAssemblyFromDomain(IL2CPP::ExportCall::GetDomain(), "mscorlib")), "System.Reflection", "Module");
             IL2CPP::ExportCall::RuntimeClassInit(SR_Module);
 
-            void *FilterTypeName_obj = IL2CPP::ExportCall::GetStaticFieldValue(IL2CPP::ExportCall::FieldFromName(SR_Module, "FilterTypeName"));
+            void *FilterTypeName_obj = (void *)IL2CPP::ExportCall::GetStaticFieldValue(IL2CPP::ExportCall::FieldFromName(SR_Module, "FilterTypeName"));
             void *FilterTypeName_klass = IL2CPP::ExportCall::ObjectGetClass(FilterTypeName_obj);
 
             int method_offset = IL2CPP::ExportCall::FieldGetOffset(IL2CPP::ExportCall::FieldFromName(FilterTypeName_klass, "method"));

@@ -2,9 +2,11 @@
 
 #include "../../Defines.hpp"
 #include "../../ExportCall.hpp"
+#include "Type.hpp"
 
 namespace IL2CPP
 {
+    struct Type;
     class Field
     {
     public:
@@ -66,6 +68,11 @@ namespace IL2CPP
             return (this->Flags() & (int)IL2CPP::Field::Attributes::Static) != 0;
         }
 
+        bool isLiteral()
+        {
+            return (this->Flags() & (int)IL2CPP::Field::Attributes::Static) != 0;
+        }
+
         int Offset()
         {
             return IL2CPP::ExportCall::FieldGetOffset(this->instance);
@@ -82,7 +89,7 @@ namespace IL2CPP
                     LOG_ERROR("Error: Trying getting static field " + std::string(this->Name()) + " of IL2CPP::Object instance, use IL2CPP::Class instead.");
                     return T(0);
                 }
-                return (T)IL2CPP::ExportCall::GetStaticFieldValue(this->instance);
+                return (T)(IL2CPP::ExportCall::GetStaticFieldValue(this->instance));
             }
             else
             {
@@ -123,6 +130,47 @@ namespace IL2CPP
         const char *Name()
         {
             return IL2CPP::ExportCall::FieldGetName(this->instance);
+        }
+
+        IL2CPP::Type *Type()
+        {
+            return (IL2CPP::Type *)IL2CPP::ExportCall::FieldGetType(this->instance);
+        }
+
+        std::string ToString(bool show_offset = true, bool show_pattern = false, int pattern_length = 16)
+        {
+            std::string result;
+            if (this->isStatic())
+                result += "static ";
+
+            result += std::string(this->Type()->Name()) + " " + this->Name();
+
+            if (show_offset)
+                result += "// 0x" + BNM::Utils::ToHex(this->Offset()) + "; ";
+
+            if (show_pattern)
+                result += "// " + BNM::Utils::BytesToPattern(BNM::Utils::BytesFromAddress((uint64_t)this->instance, pattern_length));
+
+            return result;
+        }
+
+        std::string ToString(std::string val, bool show_offset = true, bool show_pattern = false, int pattern_length = 16)
+        {
+            std::string result;
+
+            if (this->isStatic())
+                result += "static ";
+
+            result += std::string(this->Type()->Name()) + " " + this->Name();
+            result += " = " + val;
+
+            if (show_offset)
+                result += "// 0x" + BNM::Utils::ToHex(this->Offset()) + "; ";
+
+            if (show_pattern)
+                result += "// " + BNM::Utils::BytesToPattern(BNM::Utils::BytesFromAddress((uint64_t)this->instance, pattern_length));
+
+            return result;
         }
 
     private:

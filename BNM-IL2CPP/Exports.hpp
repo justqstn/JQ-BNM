@@ -50,5 +50,12 @@ namespace IL2CPP
         static void *m_IL2CPP_METHOD_GET_PARAM_NAME{nullptr};
         static void *m_IL2CPP_METHOD_GET_PARAM_TYPE{nullptr};
         static void *m_IL2CPP_TYPE_GET_NAME{nullptr};
+        static void *m_IL2CPP_METHOD_GET_RETURN_TYPE{nullptr};
+        static void *m_IL2CPP_FIELD_GET_TYPE{nullptr};
+        static void *m_IL2CPP_CLASS_IS_INTERFACE{nullptr};
+        static void *m_IL2CPP_CLASS_IS_VALUETYPE{nullptr};
+        static void *m_IL2CPP_CLASS_IS_ENUM{nullptr};
+        static void *m_IL2CPP_CLASS_IS_INFLATED{nullptr};
+        static void *m_IL2CPP_CLASS_GET_NAMESPACE{nullptr};
     }
 }

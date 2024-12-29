@@ -70,7 +70,14 @@ namespace IL2CPP
                 {IL2CPP_METHOD_GET_PARAM_COUNT, &Exports::m_IL2CPP_METHOD_GET_PARAM_COUNT},
                 {IL2CPP_METHOD_GET_PARAM_TYPE, &Exports::m_IL2CPP_METHOD_GET_PARAM_TYPE},
                 {IL2CPP_METHOD_GET_PARAM_NAME, &Exports::m_IL2CPP_METHOD_GET_PARAM_NAME},
-                {IL2CPP_TYPE_GET_NAME, &Exports::m_IL2CPP_TYPE_GET_NAME}};
+                {IL2CPP_TYPE_GET_NAME, &Exports::m_IL2CPP_TYPE_GET_NAME},
+                {IL2CPP_METHOD_GET_RETURN_TYPE, &Exports::m_IL2CPP_METHOD_GET_RETURN_TYPE},
+                {IL2CPP_FIELD_GET_TYPE, &Exports::m_IL2CPP_FIELD_GET_TYPE},
+                {IL2CPP_CLASS_IS_INTERFACE, &Exports::m_IL2CPP_CLASS_IS_INTERFACE},
+                {IL2CPP_CLASS_IS_VALUETYPE, &Exports::m_IL2CPP_CLASS_IS_VALUETYPE},
+                {IL2CPP_CLASS_IS_ENUM, &Exports::m_IL2CPP_CLASS_IS_ENUM},
+                {IL2CPP_CLASS_IS_INFLATED, &Exports::m_IL2CPP_CLASS_IS_INFLATED},
+                {IL2CPP_CLASS_GET_NAMESPACE, &Exports::m_IL2CPP_CLASS_GET_NAMESPACE}};
 
         for (auto &p : ExportMap)
         {

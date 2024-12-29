@@ -6,6 +6,7 @@
 #include "Field.hpp"
 #include "Object.hpp"
 #include "Type.hpp"
+#include "String.hpp"
 #include <vector>
 #include <algorithm>
 
@@ -53,6 +54,26 @@ namespace IL2CPP
             return (IL2CPP::Type *)IL2CPP::ExportCall::ClassEnumBasetype((void *)this);
         }
 
+        bool isEnum()
+        {
+            return IL2CPP::ExportCall::ClassIsEnum((void *)this);
+        }
+
+        bool isInterface()
+        {
+            return IL2CPP::ExportCall::ClassIsInterface((void *)this);
+        }
+
+        bool isValueType()
+        {
+            return IL2CPP::ExportCall::ClassIsValueType((void *)this);
+        }
+
+        bool isStruct()
+        {
+            return !this->isEnum() && this->isValueType();
+        }
+
         std::vector<IL2CPP::Class *> NestedClasses()
         {
             std::vector<IL2CPP::Class *> arr;
@@ -93,6 +114,76 @@ namespace IL2CPP
             }
 
             return arr;
+        }
+
+        const char *Namespace()
+        {
+            return IL2CPP::ExportCall::ClassGetNamespace((void *)this);
+        }
+
+        std::string ToString(bool show_offsets = true, bool show_patterns = false, int patterns_length = 16)
+        {
+            std::string result;
+            LOG_DEBUG("1");
+            if (this->isStruct())
+                result += "struct ";
+            else if (this->isEnum())
+                result += "enum ";
+            else if (this->isInterface())
+                result += "interface ";
+            else
+                result += "class ";
+
+            const char *Namespace = this->Namespace();
+            result += this->Name();
+
+            result += " {\n";
+
+            std::vector<IL2CPP::Field> Fields = this->Fields();
+            std::vector<IL2CPP::Method> Methods = this->Methods();
+
+            result += "\n    // Fields:\n";
+
+            for (auto it : Fields)
+            {
+                result += "    ";
+                if (it.isStatic() && it.isLiteral())
+                {
+                    const char *type = it.Type()->Name();
+                    if (strcmp(type, "System.Int32") == 0 || strcmp(type, "System.Int64") == 0)
+                    {
+                        result += it.ToString(std::to_string(it.GetValue<int64_t>()), show_offsets, show_patterns, patterns_length) + "\n";
+                    }
+                    else if (strcmp(type, "System.Single") == 0)
+                    {
+                        result += it.ToString(std::to_string(it.GetValue<float>()), show_offsets, show_patterns, patterns_length) + "\n";
+                    }
+                    else if (strcmp(type, "System.String") == 0)
+                    {
+                        result += it.ToString('"' + it.GetValue<IL2CPP::String *>()->Content() + '"', show_offsets, show_patterns, patterns_length) + "\n";
+                    }
+                    else
+                    {
+                        result += it.ToString(show_offsets, show_patterns, patterns_length) + "\n";
+                    }
+                }
+                else if (it.Type()->Class()->isEnum())
+                {
+                    result += it.ToString(std::to_string(it.GetValue<int>()), show_offsets, show_patterns, patterns_length) + "\n";
+                }
+                else
+                {
+                    result += it.ToString(show_offsets, show_patterns, patterns_length) + "\n";
+                }
+            }
+
+            result += "\n    // Methods:\n";
+            for (auto it : Methods)
+            {
+                result += "    " + it.ToString(show_offsets, show_patterns, patterns_length) + "\n";
+            }
+            result += "\n}";
+            return result;
         }
 
         IL2CPP::Class *Nested(const char *name)

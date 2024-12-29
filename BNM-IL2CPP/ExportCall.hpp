@@ -47,10 +47,10 @@ namespace IL2CPP
             return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *, const char *)>(Exports::m_IL2CPP_FIELD_FROM_NAME)(klass, name);
         }
 
-        inline void *GetStaticFieldValue(void *field)
+        inline uint64_t GetStaticFieldValue(void *field)
         {
-            void *value = nullptr;
-            reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *, void *)>(Exports::m_IL2CPP_FIELD_STATIC_GET_VALUE)(field, &value);
+            uint64_t value = 0;
+            reinterpret_cast<void(IL2CPP_CALLING_CONVENTION)(void *, void *)>(Exports::m_IL2CPP_FIELD_STATIC_GET_VALUE)(field, (void *)&value);
             return value;
         }
 
@@ -224,6 +224,40 @@ namespace IL2CPP
         {
             return reinterpret_cast<const char *(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_TYPE_GET_NAME)(type);
         }
-        // s
+
+        inline void *MethodGetReturnType(void *method)
+        {
+            return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_METHOD_GET_RETURN_TYPE)(method);
+        }
+
+        inline void *FieldGetType(void *field)
+        {
+            return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_FIELD_GET_TYPE)(field);
+        }
+
+        inline bool ClassIsInterface(void *klass)
+        {
+            return reinterpret_cast<bool(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_CLASS_IS_INTERFACE)(klass);
+        }
+
+        inline bool ClassIsEnum(void *klass)
+        {
+            return reinterpret_cast<bool(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_CLASS_IS_ENUM)(klass);
+        }
+
+        inline bool ClassIsInflated(void *klass)
+        {
+            return reinterpret_cast<bool(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_CLASS_IS_INFLATED)(klass);
+        }
+
+        inline bool ClassIsValueType(void *klass)
+        {
+            return reinterpret_cast<bool(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_CLASS_IS_VALUETYPE)(klass);
+        }
+
+        inline const char *ClassGetNamespace(void *klass)
+        {
+            return reinterpret_cast<const char *(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_CLASS_GET_NAMESPACE)(klass);
+        }
     }
 }
