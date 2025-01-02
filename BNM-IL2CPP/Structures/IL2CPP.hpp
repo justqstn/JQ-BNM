@@ -553,7 +553,7 @@ namespace IL2CPP
             result += "class ";
 
         const char *Namespace = this->Namespace();
-        if (Namespace != NULL)
+        if (strlen(Namespace) > 1)
             result += Namespace + std::string(".");
         result += this->Name();
 
