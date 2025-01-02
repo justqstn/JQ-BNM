@@ -1,12 +1,10 @@
 #pragma once
 
-#include "../Logger/Logger.h"
-
 // Debug function
-#define LOG_DEBUG Logger::log_debug
+#define LOG_DEBUG
 
 // Error function
-#define LOG_ERROR Logger::log_err
+#define LOG_ERROR
 
 #ifdef _WIN64
 #define IL2CPP_CALLING_CONVENTION __fastcall *
@@ -65,3 +63,8 @@
 #define IL2CPP_CLASS_IS_ENUM "il2cpp_class_is_enum"
 #define IL2CPP_CLASS_IS_INFLATED "il2cpp_class_is_inflated"
 #define IL2CPP_CLASS_GET_NAMESPACE "il2cpp_class_get_namespace"
+// #define IL2CPP_DOMAIN_GET_ASSEMBLIES "a62a4a_wasting_your_life"
+#define IL2CPP_IMAGE_GET_CLASS_COUNT "il2cpp_image_get_class_count"
+#define IL2CPP_IMAGE_GET_CLASS "il2cpp_image_get_class"
+#define IL2CPP_CLASS_GET_INTERFACES "il2cpp_class_get_interfaces"
+#define IL2CPP_METHOD_GET_OBJECT "il2cpp_method_get_object"

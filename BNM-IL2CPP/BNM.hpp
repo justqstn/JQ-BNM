@@ -1,11 +1,7 @@
 // Exports, defines
 
 // Structures
-#include "Structures/IL2CPP/Domain.hpp"
-#include "Structures/IL2CPP/String.hpp"
-#include "Structures/IL2CPP/Array.hpp"
-#include "Structures/IL2CPP/Class.hpp"
-#include "Structures/IL2CPP/Method.hpp"
+#include "Structures/IL2CPP.hpp"
 #include "Structures/UnityEngine.hpp"
 
 #include "Defines.hpp"
@@ -77,7 +73,12 @@ namespace IL2CPP
                 {IL2CPP_CLASS_IS_VALUETYPE, &Exports::m_IL2CPP_CLASS_IS_VALUETYPE},
                 {IL2CPP_CLASS_IS_ENUM, &Exports::m_IL2CPP_CLASS_IS_ENUM},
                 {IL2CPP_CLASS_IS_INFLATED, &Exports::m_IL2CPP_CLASS_IS_INFLATED},
-                {IL2CPP_CLASS_GET_NAMESPACE, &Exports::m_IL2CPP_CLASS_GET_NAMESPACE}};
+                {IL2CPP_CLASS_GET_NAMESPACE, &Exports::m_IL2CPP_CLASS_GET_NAMESPACE},
+                //{IL2CPP_DOMAIN_GET_ASSEMBLIES, &Exports::m_IL2CPP_DOMAIN_GET_ASSEMBLIES},
+                {IL2CPP_IMAGE_GET_CLASS_COUNT, &Exports::m_IL2CPP_IMAGE_GET_CLASS_COUNT},
+                {IL2CPP_IMAGE_GET_CLASS, &Exports::m_IL2CPP_IMAGE_GET_CLASS},
+                {IL2CPP_CLASS_GET_INTERFACES, &Exports::m_IL2CPP_CLASS_GET_INTERFACES},
+                {IL2CPP_METHOD_GET_OBJECT, &Exports::m_IL2CPP_METHOD_GET_OBJECT}};
 
         for (auto &p : ExportMap)
         {

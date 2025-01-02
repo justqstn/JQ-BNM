@@ -1,5 +1,4 @@
 # JQ-ByNameModding
- JQ-BNM is a opensource library that is used to work with IL2CPP methods using C++. Based on some repos like Aetherim, IL2CPPResolver. I made it for working without IL2CPP structures and cuz i dont like syntax of other tools that work with IL2CPP.
+Made for fun and modding a shitty unity games. Inspired of frida-il2cpp-bridge and other IL2CPP modding tools.
 
-
-so pls don't say smth like "it's shit u're don't know C++" it's my first C++ work and i don't know some language aspects that can make work better. if you want you can correct me via issues
+All tutorials in https://github.com/justqstn/JQ-BNM/wiki/Tutorials

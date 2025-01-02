@@ -57,5 +57,10 @@ namespace IL2CPP
         static void *m_IL2CPP_CLASS_IS_ENUM{nullptr};
         static void *m_IL2CPP_CLASS_IS_INFLATED{nullptr};
         static void *m_IL2CPP_CLASS_GET_NAMESPACE{nullptr};
+        static void *m_IL2CPP_DOMAIN_GET_ASSEMBLIES{nullptr};
+        static void *m_IL2CPP_IMAGE_GET_CLASS_COUNT{nullptr};
+        static void *m_IL2CPP_IMAGE_GET_CLASS{nullptr};
+        static void *m_IL2CPP_CLASS_GET_INTERFACES{nullptr};
+        static void *m_IL2CPP_METHOD_GET_OBJECT{nullptr};
     }
 }

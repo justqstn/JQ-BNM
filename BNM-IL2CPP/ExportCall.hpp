@@ -259,5 +259,30 @@ namespace IL2CPP
         {
             return reinterpret_cast<const char *(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_CLASS_GET_NAMESPACE)(klass);
         }
+
+        inline void *DomainGetAssemblies(void *domain, void **iterator)
+        {
+            return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *, void **)>(Exports::m_IL2CPP_DOMAIN_GET_ASSEMBLIES)(domain, iterator);
+        }
+
+        inline unsigned int ImageGetClassCount(void *image)
+        {
+            return reinterpret_cast<unsigned int(IL2CPP_CALLING_CONVENTION)(void *)>(Exports::m_IL2CPP_IMAGE_GET_CLASS_COUNT)(image);
+        }
+
+        inline void *ImageGetClass(void *image, unsigned int index)
+        {
+            return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *, unsigned int)>(Exports::m_IL2CPP_IMAGE_GET_CLASS)(image, index);
+        }
+
+        inline void *ClassGetInterfaces(void *klass, void **iterator)
+        {
+            return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *, void **)>(Exports::m_IL2CPP_CLASS_GET_INTERFACES)(klass, iterator);
+        }
+
+        inline void *MethodGetObject(void *method, void *hi)
+        {
+            return reinterpret_cast<void *(IL2CPP_CALLING_CONVENTION)(void *, void *)>(Exports::m_IL2CPP_IMAGE_GET_CLASS)(method, hi);
+        }
     }
 }
