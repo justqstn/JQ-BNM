@@ -1,0 +1,62 @@
+#include "../include/exports.h"
+
+namespace IL2CPP
+{
+    namespace Exports
+    {
+        HMODULE GameAssembly;
+        uintptr_t GetAllAssemblies;
+        uintptr_t AssemblyGetFromDomain;
+        uintptr_t DomainGet;
+        uintptr_t AssemblyGetImage;
+        uintptr_t ImageGetName;
+        uintptr_t ImageGetClass;
+        uintptr_t ImageGetClassCount;
+        uintptr_t ClassFromName;
+        uintptr_t ObjectNew;
+        uintptr_t ClassGetName;
+        uintptr_t ObjectGetClass;
+        uintptr_t ClassIsInterface;
+        uintptr_t ClassIsEnum;
+        uintptr_t ClassIsInflated;
+        uintptr_t ClassIsValueType;
+        uintptr_t ClassGetNamespace;
+        uintptr_t MethodFromName;
+        uintptr_t FieldFromName;
+        uintptr_t ClassGetMethods;
+        uintptr_t ClassGetFields;
+        uintptr_t ClassArrayElementSize;
+        uintptr_t TypeFromClass;
+        uintptr_t ClassEnumBasetype;
+        uintptr_t TypeGetObject;
+        uintptr_t MethodGetName;
+        uintptr_t MethodGetFlags;
+        uintptr_t MethodIsInstance;
+        uintptr_t MethodIsInflated;
+        uintptr_t MethodGetObject;
+        uintptr_t FieldGetName;
+        uintptr_t FieldGetOffset;
+        uintptr_t FieldGetFlags;
+        uintptr_t FieldGetType;
+        uintptr_t ClassFromType;
+        uintptr_t TypeGetName;
+        uintptr_t RuntimeClassInit;
+        uintptr_t GetStaticFieldValue;
+        uintptr_t SetStaticFieldValue;
+        uintptr_t ThreadAttach;
+        uintptr_t ClassGetInterfaces;
+        uintptr_t MethodGetParamCount;
+        uintptr_t MethodGetParamType;
+        uintptr_t MethodGetParamName;
+        uintptr_t ClassNestedClasses;
+        uintptr_t StringNew;
+        uintptr_t StringLength;
+        uintptr_t StringChars;
+        uintptr_t ArrayNew;
+        uintptr_t ArrayLength;
+        uintptr_t ClassFromSystemType;
+        uintptr_t MethodGetReturnType;
+        uintptr_t ObjectValueBox;
+        uintptr_t ClassGetInstanceSize;
+    }
+}

@@ -1,15 +1,20 @@
 #pragma once
 
-// Debug function
-#define LOG_DEBUG
-
-// Error function
-#define LOG_ERROR
-
 #ifdef _WIN64
 #define IL2CPP_CALLING_CONVENTION __fastcall *
 #elif _WIN32
 #define IL2CPP_CALLING_CONVENTION __cdecl *
+#endif
+
+// #define IWAKURA
+#ifdef IWAKURA
+#include "../../iwakura/include/console.h"
+#define LOG Iwakura::Console::Log
+#define DEBUG Iwakura::Console::Debug
+#else
+#include <iostream>
+#define LOG(Data) std::cout << "[L] " << Data << std::endl;
+#define DEBUG(Data) std::cout << "[D] " << Data << std::endl;
 #endif
 
 #define MAIN_MODULE "GameAssembly.dll"
@@ -63,8 +68,9 @@
 #define IL2CPP_CLASS_IS_ENUM "il2cpp_class_is_enum"
 #define IL2CPP_CLASS_IS_INFLATED "il2cpp_class_is_inflated"
 #define IL2CPP_CLASS_GET_NAMESPACE "il2cpp_class_get_namespace"
-// #define IL2CPP_DOMAIN_GET_ASSEMBLIES "a62a4a_wasting_your_life"
 #define IL2CPP_IMAGE_GET_CLASS_COUNT "il2cpp_image_get_class_count"
 #define IL2CPP_IMAGE_GET_CLASS "il2cpp_image_get_class"
 #define IL2CPP_CLASS_GET_INTERFACES "il2cpp_class_get_interfaces"
 #define IL2CPP_METHOD_GET_OBJECT "il2cpp_method_get_object"
+#define IL2CPP_THREAD_ATTACH "il2cpp_thread_attach"
+#define IL2CPP_CLASS_GET_INSTANCE_SIZE "il2cpp_class_instance_size"
