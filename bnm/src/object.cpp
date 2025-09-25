@@ -53,6 +53,33 @@ namespace IL2CPP
         return result;
     }
 
+    IL2CPP::Method Object::MethodByIO(const char *Method, int Offset)
+    {
+        std::vector<IL2CPP::Method> methods = this->Class()->Methods();
+        for (size_t i = 0; i < methods.size(); i++)
+        {
+            if (strcmp(methods[i].Name(), Method))
+                return IL2CPP::Method(methods[i + Offset].Handle, (uintptr_t)this);
+        }
+
+        LOG(std::format("Couldn't find method by IO. Name: {}; Index: {}", Method, Offset));
+
+        return IL2CPP::Method(0, 0);
+    }
+
+    IL2CPP::Field Object::FieldByIO(const char *Field, int Offset)
+    {
+        std::vector<IL2CPP::Field> fields = this->Class()->Fields();
+        for (size_t i = 0; i < fields.size(); i++)
+        {
+            if (strcmp(fields[i].Name(), Field))
+                return IL2CPP::Field(fields[i + Offset].Handle, (uintptr_t)this);
+        }
+
+        LOG(std::format("Couldn't find field by IO. Name: {}; Index: {}", Field, Offset));
+        return IL2CPP::Field(0, 0);
+    }
+
     IL2CPP::Field Object::Field(const char *Name)
     {
         return IL2CPP::Field(IL2CPP::ExportCall::FieldFromName((void *)this->Class(), Name), (uintptr_t)this);

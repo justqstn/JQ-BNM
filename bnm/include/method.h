@@ -21,15 +21,6 @@ namespace IL2CPP
     public:
         Method(uintptr_t Handle, uintptr_t ParentInstance = 0);
 
-        uintptr_t Handle;
-        uintptr_t ParentInstance;
-
-        template <typename T>
-        operator T()
-        {
-            return (T)this->Handle;
-        }
-
         enum class Attributes
         {
             MemberAccessMask = 0x0007,
@@ -58,19 +49,31 @@ namespace IL2CPP
             RequireSecObject = 0x8000
         };
 
+        // @return Method return type
         IL2CPP::Type *ReturnType();
+        // @return Method name
         const char *Name();
+        // @return Naive method address (Virutal Address)
         uintptr_t VA();
+        // @return Native method offset (Relative Virtual Address)
         uintptr_t RVA();
+        // Checks is it inflated method
         bool isInflated();
+        // Checks is it static method
         bool isStatic();
+        // @return Method object
         IL2CPP::Object *Object();
+        // @note WIP
         std::vector<IL2CPP::Class *> Generics();
+        // Creates generic method @return Method object
         IL2CPP::Method Inflate(std::vector<IL2CPP::Class *> classes);
+        // @return Parameters count
         uint32_t ParametersCount();
+        // @return Vector of parameters
         std::vector<Parameter> Parameters();
         std::string ToString(const DumperParameters &Parameters = {}, int Index = -1);
 
+        // Invokes method with given parameters
         template <typename T, typename... TArgs>
         T Invoke(TArgs... Args)
         {
@@ -81,6 +84,10 @@ namespace IL2CPP
                     LOG(std::format("Couldn't invoke static method \"{}\": the method was received from IL2CPP::Object, not IL2CPP::Class.", this->Name()));
                     return (T)0;
                 }
+
+                if (this->isInflated())
+                    return ((T (*)(TArgs..., void *))(this->VA()))(Args..., (void *)this->Handle);
+
                 return ((T (*)(TArgs...))(this->VA()))(Args...);
             }
             else
@@ -90,10 +97,15 @@ namespace IL2CPP
                     LOG(std::format("Couldn't invoke non-static method \"{}\": the method was received from IL2CPP::Class, not IL2CPP::Object.", this->Name()));
                     return (T)0;
                 }
+
+                if (this->isInflated())
+                    return ((T (*)(void *, TArgs..., void *))(this->VA()))((void *)this->ParentInstance, Args..., (void *)this->Handle);
+
                 return ((T (*)(void *, TArgs...))(this->VA()))((void *)this->ParentInstance, Args...);
             }
         }
 
+        // Invokes method with given parameters
         template <typename T, typename... TArgs>
         T operator()(TArgs... Args)
         {
@@ -104,6 +116,10 @@ namespace IL2CPP
                     LOG(std::format("Couldn't invoke static method \"{}\": the method was received from IL2CPP::Object, not IL2CPP::Class.", this->Name()));
                     return (T)0;
                 }
+
+                if (this->isInflated())
+                    return ((T (*)(TArgs..., void *))(this->VA()))(Args..., (void *)this->Handle);
+
                 return ((T (*)(TArgs...))(this->VA()))(Args...);
             }
             else
@@ -113,9 +129,18 @@ namespace IL2CPP
                     LOG(std::format("Couldn't invoke non-static method \"{}\": the method was received from IL2CPP::Class, not IL2CPP::Object.", this->Name()));
                     return (T)0;
                 }
+
+                if (this->isInflated())
+                    return ((T (*)(void *, TArgs..., void *))(this->VA()))((void *)this->ParentInstance, Args..., (void *)this->Handle);
+
                 return ((T (*)(void *, TArgs...))(this->VA()))((void *)this->ParentInstance, Args...);
             }
         }
+
+        // Pointer to Field
+        uintptr_t Handle;
+        // Pointer to Object (zero if it's static)
+        uintptr_t ParentInstance;
     };
 
 }

@@ -54,12 +54,23 @@ namespace IL2CPP
         std::vector<IL2CPP::Class *> classes = this->Classes();
         for (size_t i = 0; i < classes.size(); i++)
         {
-            if (Parameters.ShowIndexes)
-                result += std::format("[{}] ", Index);
             result += std::string("// ") + this->Name() + std::string("\n");
             result += classes[i]->ToString(Parameters, i);
             result += "\n\n";
         }
         return result;
+    }
+
+    IL2CPP::Class *Image::ClassByIO(const char *Class, int Offset)
+    {
+        std::vector<IL2CPP::Class *> classes = this->Classes();
+        for (size_t i = 0; i < classes.size(); i++)
+        {
+            if (strcmp(classes[i]->Name(), Class))
+                return classes[i + Class];
+        }
+
+        LOG(std::format("Couldn't find field by IO. Name: {}; Offset: {}", Class, Offset));
+        return nullptr;
     }
 }

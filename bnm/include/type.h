@@ -10,6 +10,7 @@ namespace IL2CPP
     struct Type
     {
         IL2CPP::Class *Class();
+        // @return Type name
         const char *Name();
         IL2CPP::Object *Object();
     };

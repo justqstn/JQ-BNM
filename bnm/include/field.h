@@ -37,14 +37,21 @@ namespace IL2CPP
 
         Field(uintptr_t Handle, uintptr_t ParentInstance = 0);
 
+        // @return Field name
         const char *Name();
+        // @return Field type
         IL2CPP::Type *Type();
+        // @return Field flags
         int Flags();
+        // Checks is it static field
         bool isStatic();
+        // Checks is it literal @note Literals are fields with known values at compile time
         bool isLiteral();
+        // @return Field offset
         int Offset();
         std::string ToString(const DumperParameters &Parameters = {}, int Index = -1, const std::string &FieldValue = "");
 
+        // @return Field value
         template <typename T>
         T GetValue()
         {
@@ -67,6 +74,7 @@ namespace IL2CPP
             }
         }
 
+        // Sets field value
         template <typename T>
         void SetValue(T value)
         {
@@ -92,7 +100,9 @@ namespace IL2CPP
             }
         }
 
+        // Pointer to Field
         uintptr_t Handle;
+        // Pointer to Object (zero if it's static)
         uintptr_t ParentInstance;
     };
 }

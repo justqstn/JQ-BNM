@@ -18,7 +18,9 @@ namespace IL2CPP
         IL2CPP::Object *New(IL2CPP::Class *Class);
         IL2CPP::Method Method(const char *Name, int ArgCount = -1);
         IL2CPP::Method Method(const char *Name, std::vector<std::string> ArgTypes);
-        IL2CPP::Field Field(const char *name);
+        IL2CPP::Method MethodByIO(const char *Method, int Offset);
+        IL2CPP::Field Field(const char *Name);
+        IL2CPP::Field FieldByIO(const char *Field, int Offset);
         template <typename T>
         static IL2CPP::Object *Box(const char *PrimitiveType, const T &Value)
         {

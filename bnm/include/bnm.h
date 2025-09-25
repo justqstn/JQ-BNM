@@ -5,5 +5,6 @@
 
 namespace IL2CPP
 {
+    // @note Call it at start of your application launch
     void Initialize();
 }

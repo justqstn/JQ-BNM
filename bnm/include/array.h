@@ -6,6 +6,7 @@
 namespace
 {
     uintptr_t ArrayOffset = 0;
+    // Gets offset of C-Array in IL2CPP::Array by comparing value of first element.
     uintptr_t GetArrayOffset(void *StartPtr, int16_t Value)
     {
         if (ArrayOffset == 0)
@@ -31,12 +32,17 @@ namespace IL2CPP
     struct Array
     {
     public:
+        // Creates new array instance with given class and length @return Pointer to array
         static IL2CPP::Array *New(IL2CPP::Class *Class, int length);
+        // @return Array length
         int Length();
         IL2CPP::Object *Object();
+        // @return Array type
         IL2CPP::Type *ElementType();
+        // @return Array type size
         int ElementSize();
 
+        // @return C-array of elements
         template <typename T>
         T *Elements()
         {
@@ -47,12 +53,14 @@ namespace IL2CPP
             return (T *)addr;
         }
 
+        // @return Element by index
         template <typename T>
         T Get(int index)
         {
             return this->Elements<T>()[index];
         }
 
+        // @return Sets element by index
         template <typename T>
         void Set(int index, T value)
         {

@@ -7,7 +7,9 @@ namespace IL2CPP
 {
     struct DumperParameters
     {
+        // @note WIP
         std::vector<std::string> WhiteListAssembly;
+        // @note WIP @union s s
         std::vector<std::string> BlackListAssembly;
         bool ShowIndexes;
     };

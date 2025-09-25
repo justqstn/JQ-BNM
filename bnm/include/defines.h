@@ -6,7 +6,6 @@
 #define IL2CPP_CALLING_CONVENTION __cdecl *
 #endif
 
-// #define IWAKURA
 #ifdef IWAKURA
 #include "../../iwakura/include/console.h"
 #define LOG Iwakura::Console::Log
